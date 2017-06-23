@@ -117,6 +117,7 @@ public abstract class GameFramework extends JFrame implements Runnable {
     protected Vector2f getWorldMousePosition() {
         Matrix3x3f screentToWorld = getReverseViewportATransform();
         //
+        return null;
     }
 
     @Override
@@ -187,7 +188,7 @@ public abstract class GameFramework extends JFrame implements Runnable {
     protected void render(Graphics g){
         g.setFont(appFont);
         g.setColor(appFPSColor);
-        frameRate.caculate();
+        frameRate.calculate();
         textPos = Utility.drawString(g, 20, 0, String.valueOf(frameRate.fps()));
     }
 
