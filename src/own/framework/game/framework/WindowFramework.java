@@ -43,6 +43,10 @@ public class WindowFramework extends GameFramework {
         canvas.requestFocus();
     }
 
+    protected Canvas getCanvas(){
+        return canvas;
+    }
+
     protected void onComponentResized(ComponentEvent e){
         Dimension size = getContentPane().getSize();
         setupViewport(size.width, size.height);

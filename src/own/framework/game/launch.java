@@ -1,5 +1,6 @@
 package own.framework.game;
 
+import own.framework.game.examples.RelativeMouseExample;
 import own.framework.game.framework.WindowFramework;
 
 /**
@@ -7,6 +8,7 @@ import own.framework.game.framework.WindowFramework;
  */
 public class launch {
     public static void main(String args[]){
-        new WindowFramework();
+//        new WindowFramework();
+        new RelativeMouseExample();
     }
 }

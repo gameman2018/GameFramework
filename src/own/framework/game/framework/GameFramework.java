@@ -1,10 +1,8 @@
 package own.framework.game.framework;
 
 import own.framework.game.input.KeyboardInput;
-import own.framework.game.support.FrameRate;
-import own.framework.game.support.Matrix3x3f;
-import own.framework.game.support.Utility;
-import own.framework.game.support.Vector2f;
+import own.framework.game.input.RelativeMouseInput;
+import own.framework.game.support.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +24,7 @@ public abstract class GameFramework extends JFrame implements Runnable {
     protected FrameRate frameRate;
     //    protected RelativeMouseInput mouse;
     protected KeyboardInput keyboard;
+    protected RelativeMouseInput mouse;
     protected Color appBackground = Color.BLACK;
     protected Color appBorder = Color.LIGHT_GRAY;
     protected Color appFPSColor = Color.GREEN;
@@ -77,8 +76,12 @@ public abstract class GameFramework extends JFrame implements Runnable {
 
     protected void setInput(Component component) {
         keyboard = new KeyboardInput();
+        mouse = new RelativeMouseInput(component);
         component.addKeyListener(keyboard);
         // not mouse
+        component.addMouseListener(mouse);
+        component.addMouseMotionListener(mouse);
+        component.addMouseWheelListener(mouse);
     }
 
     protected void createBufferStrategy(Canvas component, int bufferPools) {
@@ -115,9 +118,18 @@ public abstract class GameFramework extends JFrame implements Runnable {
     }
 
     protected Vector2f getWorldMousePosition() {
-        Matrix3x3f screentToWorld = getReverseViewportATransform();
-        //
-        return null;
+        Matrix3x3f screenToWorld = getReverseViewportATransform();
+        Point mousePos = mouse.getPosition();
+        Vector2f screenPos = new Vector2f(mousePos.x, mousePos.y);
+        return screenToWorld.mul(screenPos);
+    }
+
+    protected Vector2f getRelativeWorldMousePosition(){
+        float sx = appWorldWidth / (getScreenWidth() - 1);
+        float sy = appWorldHeight / (getScreenHeight() - 1);
+        Matrix3x3f viewport = Matrix3x3f.scale(sx, -sy);
+        Point p = mouse.getPosition();
+        return viewport.mul(new Vector2f(p.x, p.y));
     }
 
     @Override
@@ -179,6 +191,7 @@ public abstract class GameFramework extends JFrame implements Runnable {
 
     protected void processInput(float delta){
         keyboard.poll();
+        mouse.poll();
     }
 
     protected void updateObject(float delta){
